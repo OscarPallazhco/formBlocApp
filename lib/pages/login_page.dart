@@ -179,7 +179,9 @@ class LoginPage extends StatelessWidget {
             ),
             primary: Colors.deepPurple
           ),
-          onPressed: !snapshot.hasData ? null : (){},      
+          onPressed: !snapshot.hasData ? null : (){
+            Navigator.pushNamed(context, 'home_page');
+          },      
         );
       },
 
