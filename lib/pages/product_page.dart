@@ -1,6 +1,18 @@
 import 'package:flutter/material.dart';
 
-class ProductPage extends StatelessWidget {
+import 'package:formbloc_app/utils/utils.dart' as utils;
+
+class ProductPage extends StatefulWidget {
+
+  // StatefulWidget para que funcione mejora la retroalimentación del Form
+
+  @override
+  _ProductPageState createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  final formKey = GlobalKey<FormState>(); 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,6 +34,7 @@ class ProductPage extends StatelessWidget {
         child: Container(
           padding: EdgeInsets.all(15),
           child: Form(
+            key: formKey,
             child: Column(
               children: [
                 _nameImputField(),
@@ -41,6 +54,15 @@ class ProductPage extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Producto'
       ),
+      validator: (value){
+        // si se devuelve un string, significa que es el error,
+        // si se devuelve null tncs pasó la validación
+        if (value.length < 3) {
+          return 'Ingrese el nombre del producto';
+        } else {
+          return null;
+        }
+      },
     );
   }
 
@@ -50,6 +72,14 @@ class ProductPage extends StatelessWidget {
       decoration: InputDecoration(
         labelText: 'Precio'
       ),
+      validator: (value){
+        if (!utils.isNumeris(value)) {
+          return 'Valor inválido';
+        }
+        else{
+          return null;
+        }
+      },
     );
   }
 
@@ -64,9 +94,12 @@ class ProductPage extends StatelessWidget {
           borderRadius: BorderRadius.circular(20)
         ),
       ),
-      onPressed: (){},
+      onPressed: _submit,
     );
   }
 
+  _submit(){
+    if (!formKey.currentState.validate()) return null;
 
+  }
 }
