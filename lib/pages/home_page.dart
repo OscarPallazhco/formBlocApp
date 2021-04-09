@@ -10,15 +10,13 @@ class HomePage extends StatelessWidget {
         title: Text('Profile Page'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('Email: ${loginBloc.email}'),
-            Text('Password: ${loginBloc.password}'),
-          ],
-        ),
+      body: Container(),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.add),
+        backgroundColor: Colors.deepPurple,
+        onPressed: () {
+          Navigator.pushNamed(context, 'product_page');
+        },
       ),
     );
   }
