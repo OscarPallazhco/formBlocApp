@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:formbloc_app/models/product_model.dart';
 import 'package:formbloc_app/utils/utils.dart' as utils;
 
 class ProductPage extends StatefulWidget {
@@ -11,7 +12,8 @@ class ProductPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<ProductPage> {
-  final formKey = GlobalKey<FormState>(); 
+  final formKey = GlobalKey<FormState>();
+  final ProductModel product = new ProductModel();
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,7 @@ class _ProductPageState extends State<ProductPage> {
               children: [
                 _nameImputField(),
                 _priceImputField(),
+                _availableSwitchField(),
                 _buttonSave(),
               ],
             )
@@ -50,6 +53,7 @@ class _ProductPageState extends State<ProductPage> {
 
   Widget _nameImputField(){
     return TextFormField(
+      initialValue: product.title,
       textCapitalization: TextCapitalization.sentences,
       decoration: InputDecoration(
         labelText: 'Producto'
@@ -63,11 +67,16 @@ class _ProductPageState extends State<ProductPage> {
           return null;
         }
       },
+      onSaved: (value){
+        // onsaved se ejecuta cuando el validator es exitoso
+        product.title = value;
+      },
     );
   }
 
   Widget _priceImputField(){
     return TextFormField(
+      initialValue: product.value.toString(),      
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
         labelText: 'Precio'
@@ -80,6 +89,25 @@ class _ProductPageState extends State<ProductPage> {
           return null;
         }
       },
+      onSaved: (value){
+        product.value = double.parse(value);
+      },
+    );
+  }
+
+  _availableSwitchField(){
+    return SwitchListTile(
+      contentPadding: EdgeInsets.only(left: 0),
+      dense: true,            
+      value: product.avalilable,
+      onChanged: (bool value){
+        setState(() {
+          product.avalilable = value;
+        });
+      },
+      title: Text('Disponilbe'),
+      activeColor: Colors.deepPurple,
+      
     );
   }
 
@@ -100,6 +128,7 @@ class _ProductPageState extends State<ProductPage> {
 
   _submit(){
     if (!formKey.currentState.validate()) return null;
-
+    formKey.currentState.save();  
+    // dispara todos los onsaved de los textformfield dentro del formulario
   }
 }
