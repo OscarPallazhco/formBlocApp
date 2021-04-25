@@ -24,27 +24,27 @@ class ProductsProvider {
     }
   }
 
-    Future<List<ProductModel>> getProducts() async{
-      try {
-        final String productsUrl = '$databaseUrl/products.json';
-        final url = Uri.parse(productsUrl);
-        final resp = await http.get(url);
+  Future<List<ProductModel>> getProducts() async{
+    try {
+      final String productsUrl = '$databaseUrl/products.json';
+      final url = Uri.parse(productsUrl);
+      final resp = await http.get(url);
 
-        final Map<String, dynamic> decodedData = json.decode(resp.body);
-        // print(decodedData);
-        if (decodedData == null ) return [];
-        List<ProductModel> products = [];
-        decodedData.forEach((key, value) {
-          ProductModel prodTemp = ProductModel.fromJson(value);
-          prodTemp.id = key;
-          products.add(prodTemp);
-        });
-        return products;
-      } catch (e) {
-        print('error en getProducts');
-        print(e);
-        return [];
-      }
-  }
+      final Map<String, dynamic> decodedData = json.decode(resp.body);
+      // print(decodedData);
+      if (decodedData == null ) return [];
+      List<ProductModel> products = [];
+      decodedData.forEach((key, value) {
+        ProductModel prodTemp = ProductModel.fromJson(value);
+        prodTemp.id = key;
+        products.add(prodTemp);
+      });
+      return products;
+    } catch (e) {
+      print('error en getProducts');
+      print(e);
+      return [];
+    }
+}
   
 }
