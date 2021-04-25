@@ -13,21 +13,21 @@ class ProductModel {
         this.id,
         this.title = '',
         this.value = 0.0,
-        this.avalilable = true,
+        this.available = true,
         this.photoUrl,
     });
 
     String id;
     String title;
     double value;
-    bool avalilable;
+    bool available;
     String photoUrl;
 
     factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
         id: json["id"],
         title: json["title"],
         value: json["value"],
-        avalilable: json["avalilable"],
+        available: json["available"],
         photoUrl: json["photoUrl"],
     );
 
@@ -35,7 +35,7 @@ class ProductModel {
         "id": id,
         "title": title,
         "value": value,
-        "avalilable": avalilable,
+        "available": available,
         "photoUrl": photoUrl,
     };
 }

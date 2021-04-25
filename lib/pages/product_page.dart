@@ -101,10 +101,10 @@ class _ProductPageState extends State<ProductPage> {
     return SwitchListTile(
       contentPadding: EdgeInsets.only(left: 0),
       dense: true,            
-      value: product.avalilable,
+      value: product.available,
       onChanged: (bool value){
         setState(() {
-          product.avalilable = value;
+          product.available = value;
         });
       },
       title: Text('Disponilbe'),
