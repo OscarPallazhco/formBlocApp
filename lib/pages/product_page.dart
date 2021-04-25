@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:formbloc_app/models/product_model.dart';
+import 'package:formbloc_app/providers/products_provider.dart';
 import 'package:formbloc_app/utils/utils.dart' as utils;
 
 class ProductPage extends StatefulWidget {
@@ -13,6 +14,7 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
+  final productsProvider = new ProductsProvider();
   final ProductModel product = new ProductModel();
 
   @override
@@ -130,5 +132,6 @@ class _ProductPageState extends State<ProductPage> {
     if (!formKey.currentState.validate()) return null;
     formKey.currentState.save();  
     // dispara todos los onsaved de los textformfield dentro del formulario
+    productsProvider.createProduct(product);
   }
 }
