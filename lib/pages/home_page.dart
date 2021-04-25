@@ -39,10 +39,13 @@ class HomePage extends StatelessWidget {
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index) {
               final product = products[index];
+              print(product.title);
               return Dismissible(
-                key: UniqueKey(),
+                key: Key(product.id),
                 background: Container(color: Colors.purple[100],),
-                onDismissed: (DismissDirection direction){},
+                onDismissed: (DismissDirection direction) async{
+                  await productsProvider.deleteProduct(product.id);
+                },
                 child: ListTile(
                   title: Text(product.title),
                   subtitle: Text('\$${product.value}'),

@@ -45,6 +45,21 @@ class ProductsProvider {
       print(e);
       return [];
     }
-}
+  }
+
+  Future<int> deleteProduct(String id) async{
+    try {
+      final String productUrl = '$databaseUrl/products/$id.json';
+      final url = Uri.parse(productUrl);
+      final resp = await http.delete(url);
+      print(resp);
+      print(resp.body);
+      return 1;
+    } catch (e) {
+      print('error en deleteProduct');
+      print(e);
+      return 0;
+    }
+  }
   
 }
