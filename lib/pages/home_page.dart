@@ -60,6 +60,7 @@ class _HomePageState extends State<HomePage> {
                   ),
                   onTap: (){
                     Navigator.pushNamed(context, 'product_page', arguments: product).then((value) => setState((){}));
+                    // paso de argumentos en el navigator
                   },
                 ),
               );
