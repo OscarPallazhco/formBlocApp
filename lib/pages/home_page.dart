@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:formbloc_app/bloc/provider.dart';
+import 'package:formbloc_app/models/product_model.dart';
+import 'package:formbloc_app/providers/products_provider.dart';
 
 class HomePage extends StatelessWidget {
+
+  final productsProvider = new ProductsProvider();
+
   @override
   Widget build(BuildContext context) {
     final loginBloc = Provider.of(context);
@@ -10,7 +15,7 @@ class HomePage extends StatelessWidget {
         title: Text('Profile Page'),
         centerTitle: true,
       ),
-      body: Container(),
+      body: showProducts(),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
         backgroundColor: Colors.deepPurple,
@@ -18,6 +23,44 @@ class HomePage extends StatelessWidget {
           Navigator.pushNamed(context, 'product_page');
         },
       ),
+    );
+  }
+
+  showProducts() {
+    return FutureBuilder(
+      future: productsProvider.getProducts(),
+      builder: (BuildContext context, AsyncSnapshot<List<ProductModel>> snapshot) {
+        if (snapshot.hasData) {
+          List<ProductModel> products = snapshot.data;
+          if (products.length == 0) {
+            return Center(child: Text('No hay productos disponibles'),);
+          }
+          return ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (BuildContext context, int index) {
+              final product = products[index];
+              return Dismissible(
+                key: UniqueKey(),
+                background: Container(color: Colors.purple[100],),
+                onDismissed: (DismissDirection direction){},
+                child: ListTile(
+                  title: Text(product.title),
+                  subtitle: Text('\$${product.value}'),
+                  leading: Icon(
+                    Icons.check_circle,
+                    color: product.available ? Colors.deepPurple: Colors.grey,
+                  ),
+                  onTap: (){
+                    Navigator.pushNamed(context, 'product_page');
+                  },
+                ),
+              );
+            },
+          );
+        } else {
+          return Center(child: CircularProgressIndicator());
+        }
+      },
     );
   }
 }
