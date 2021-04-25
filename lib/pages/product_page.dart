@@ -15,10 +15,17 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
   final productsProvider = new ProductsProvider();
-  final ProductModel product = new ProductModel();
+  ProductModel product = new ProductModel();
 
   @override
   Widget build(BuildContext context) {
+
+    final ProductModel productArg = ModalRoute.of(context).settings.arguments;
+    // cuando se quiera hacer un put vendrá un producto a través del Navigator 
+    if (productArg != null) {
+      product = productArg;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Product'),
@@ -132,6 +139,12 @@ class _ProductPageState extends State<ProductPage> {
     if (!formKey.currentState.validate()) return null;
     formKey.currentState.save();  
     // dispara todos los onsaved de los textformfield dentro del formulario
-    productsProvider.createProduct(product);
+    
+    //El botón será usado para crear o para actualizar
+    if (product.id == null) {
+      productsProvider.createProduct(product);
+    } else {
+      productsProvider.updateProduct(product);
+    }
   }
 }

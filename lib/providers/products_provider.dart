@@ -61,5 +61,20 @@ class ProductsProvider {
       return 0;
     }
   }
+
+  Future<bool> updateProduct(ProductModel product) async{
+    try {
+      final String productUrl = '$databaseUrl/products/${product.id}.json';
+      final url = Uri.parse(productUrl);
+      final resp = await http.put(url, body: productModelToJson(product));
+      final decodedData = json.decode(resp.body);
+      print(decodedData);
+      return true;
+    } catch (e) {
+      print('error en updateProduct');
+      print(e);
+      return false;
+    }
+  }
   
 }

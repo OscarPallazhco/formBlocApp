@@ -3,8 +3,13 @@ import 'package:formbloc_app/bloc/provider.dart';
 import 'package:formbloc_app/models/product_model.dart';
 import 'package:formbloc_app/providers/products_provider.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
 
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   final productsProvider = new ProductsProvider();
 
   @override
@@ -20,7 +25,7 @@ class HomePage extends StatelessWidget {
         child: Icon(Icons.add),
         backgroundColor: Colors.deepPurple,
         onPressed: () {
-          Navigator.pushNamed(context, 'product_page');
+          Navigator.pushNamed(context, 'product_page').then((value) => setState((){}));
         },
       ),
     );
@@ -54,7 +59,7 @@ class HomePage extends StatelessWidget {
                     color: product.available ? Colors.deepPurple: Colors.grey,
                   ),
                   onTap: (){
-                    Navigator.pushNamed(context, 'product_page');
+                    Navigator.pushNamed(context, 'product_page', arguments: product).then((value) => setState((){}));
                   },
                 ),
               );
