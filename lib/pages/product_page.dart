@@ -14,8 +14,10 @@ class ProductPage extends StatefulWidget {
 
 class _ProductPageState extends State<ProductPage> {
   final formKey = GlobalKey<FormState>();
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   final productsProvider = new ProductsProvider();
   ProductModel product = new ProductModel();
+  bool _saving = false;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class _ProductPageState extends State<ProductPage> {
     }
 
     return Scaffold(
+      key: scaffoldKey,
       appBar: AppBar(
         title: Text('Product'),
         centerTitle: true,
@@ -131,20 +134,36 @@ class _ProductPageState extends State<ProductPage> {
           borderRadius: BorderRadius.circular(20)
         ),
       ),
-      onPressed: _submit,
+      onPressed: _saving ? null : _submit,
     );
   }
 
-  _submit(){
+  _submit() async{
     if (!formKey.currentState.validate()) return null;
-    formKey.currentState.save();  
+    formKey.currentState.save();
     // dispara todos los onsaved de los textformfield dentro del formulario
     
+    bool result;
+    setState(() {_saving = true;});
     //El botón será usado para crear o para actualizar
     if (product.id == null) {
-      productsProvider.createProduct(product);
+      result = await productsProvider.createProduct(product);
     } else {
-      productsProvider.updateProduct(product);
+      result = await productsProvider.updateProduct(product);
     }
+    setState(() {_saving = false;});
+    String msgAction = (product.id == null) ? 'Registro guardado' : 'Registro actualizado';
+    String msgResult = result ? msgAction : 'Error al guardar el registro';
+    _showSnackbar(msgResult);
+    Navigator.pop(context);
+  }
+
+  _showSnackbar(String msg){
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(msg),
+        duration: Duration(seconds: 2),        
+      )
+    );
   }
 }
