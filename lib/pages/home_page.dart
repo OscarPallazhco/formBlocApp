@@ -44,7 +44,6 @@ class _HomePageState extends State<HomePage> {
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index) {
               final product = products[index];
-              print(product.title);
               return Dismissible(
                 key: Key(product.id),
                 background: Container(color: Colors.purple[100],),
