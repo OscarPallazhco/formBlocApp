@@ -1,11 +1,17 @@
+import 'dart:io';
+
 import 'package:http/http.dart' as http;
+import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
 import 'package:formbloc_app/models/product_model.dart';
 import 'package:formbloc_app/global/environments.dart';
+import 'package:mime_type/mime_type.dart';
 
 class ProductsProvider {
 
-  final String databaseUrl = Environments.databaseUrl;
+  final String databaseUrl  = Environments.databaseUrl;
+  final String uploadPreset = Environments.uploadPreset;
+  final String cloudName    = Environments.cloudName;
 
   Future<bool> createProduct(ProductModel product) async{
     try {
@@ -74,6 +80,41 @@ class ProductsProvider {
       print('error en updateProduct');
       print(e);
       return false;
+    }
+  }
+
+  Future<String> uploadImage(File image) async{
+    try {
+      if (image.existsSync()) {
+        final url = Uri.parse('https://api.cloudinary.com/v1_1/$cloudName/image/upload?upload_preset=$uploadPreset');
+        final mimeType = mime(image.path).split('/');// ['image','jpg']
+        final request = http.MultipartRequest('POST', url);
+        final file = await http.MultipartFile.fromPath(
+          'file',
+          image.path,
+          contentType: MediaType(mimeType[0], mimeType[1])
+        );
+        request.files.add(file);
+        final streamedResponse = await request.send();
+        final resp = await http.Response.fromStream(streamedResponse);
+        if (!(resp.statusCode == 200 || resp.statusCode == 201 )) {
+          print('error en uploadImage');
+          print(resp.body);
+          return null;
+        }
+        final decodedData = json.decode(resp.body);
+        print(decodedData);
+        return decodedData['secure_url'];
+
+      } else {
+        print('error en uploadImage');
+        print('Archivo no existe');
+        return null;
+      }
+    } catch (e) {
+      print('error en uploadImage');
+      print(e);
+      return null;
     }
   }
   

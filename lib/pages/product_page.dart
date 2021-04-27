@@ -150,6 +150,14 @@ class _ProductPageState extends State<ProductPage> {
     
     bool result;
     setState(() {_saving = true;});
+
+    if (productImage != null) {
+      final urlImageUploaded = await productsProvider.uploadImage(productImage);
+      if (urlImageUploaded != null) {
+        product.photoUrl = urlImageUploaded;
+      }
+    }
+
     //El botón será usado para crear o para actualizar
     if (product.id == null) {
       result = await productsProvider.createProduct(product);
