@@ -182,8 +182,13 @@ class _ProductPageState extends State<ProductPage> {
 
   _showImage(){
     if (product.photoUrl != null) {
-      // load image
-      return Container();
+      return FadeInImage(
+        placeholder: AssetImage('assets/jar-loading.gif'), 
+        image: NetworkImage(product.photoUrl),
+        height: 300,
+        width: double.infinity,
+        fit: BoxFit.cover,
+      );
     }else{
       if (productImage != null) {
         return Image.file(

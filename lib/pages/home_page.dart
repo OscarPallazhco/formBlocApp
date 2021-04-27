@@ -17,7 +17,7 @@ class _HomePageState extends State<HomePage> {
     final loginBloc = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Profile Page'),
+        title: Text('Products'),
         centerTitle: true,
       ),
       body: showProducts(),
@@ -50,19 +50,44 @@ class _HomePageState extends State<HomePage> {
                 onDismissed: (DismissDirection direction) async{
                   await productsProvider.deleteProduct(product.id);
                 },
-                child: ListTile(
-                  title: Text(product.title),
-                  subtitle: Text('\$${product.value}'),
-                  leading: Icon(
-                    Icons.check_circle,
-                    color: product.available ? Colors.deepPurple: Colors.grey,
-                  ),
+                child: GestureDetector(
                   onTap: (){
                     Navigator.pushNamed(context, 'product_page', arguments: product).then((value) => setState((){}));
                     // paso de argumentos en el navigator
                   },
-                ),
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(20)),
+                    ),
+                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    elevation: 8,
+                    shadowColor: Colors.black,
+                    color: Colors.grey[100],
+                    child: Column(
+                      children: [
+                        product.photoUrl == null 
+                          ? Image(image: AssetImage('assets/no-image.png'))
+                          : FadeInImage(
+                              placeholder: AssetImage('assets/jar-loading.gif'), 
+                              image: NetworkImage(product.photoUrl),
+                              height: 300,
+                              width: double.infinity,
+                              fit: BoxFit.cover,
+                            ),
+                        ListTile(
+                          title: Text(product.title),
+                          subtitle: Text('\$${product.value}'),
+                          leading: Icon(
+                            Icons.check_circle,
+                            color: product.available ? Colors.deepPurple: Colors.grey,
+                          ),
+                        ),
+                      ],
+                    ),                  
+                  ),
+                )
               );
+
             },
           );
         } else {
