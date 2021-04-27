@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import 'package:formbloc_app/models/product_model.dart';
 import 'package:formbloc_app/providers/products_provider.dart';
@@ -18,6 +21,7 @@ class _ProductPageState extends State<ProductPage> {
   final productsProvider = new ProductsProvider();
   ProductModel product = new ProductModel();
   bool _saving = false;
+  File productImage;
 
   @override
   Widget build(BuildContext context) {
@@ -36,11 +40,11 @@ class _ProductPageState extends State<ProductPage> {
         actions: [
           IconButton(
             icon: Icon(Icons.photo_size_select_actual),
-            onPressed: (){}
+            onPressed: _selectImage
           ),
           IconButton(
             icon: Icon(Icons.camera_alt_rounded),
-            onPressed: (){}
+            onPressed: _takePhoto
           ),
         ],
       ),
@@ -51,6 +55,7 @@ class _ProductPageState extends State<ProductPage> {
             key: formKey,
             child: Column(
               children: [
+                _showImage(),
                 _nameImputField(),
                 _priceImputField(),
                 _availableSwitchField(),
@@ -166,4 +171,41 @@ class _ProductPageState extends State<ProductPage> {
       )
     );
   }
+
+  _showImage(){
+    if (product.photoUrl != null) {
+      // load image
+      return Container();
+    }else{
+      if (productImage != null) {
+        return Image.file(
+          productImage,
+          fit: BoxFit.cover,
+          height: 300,
+        );        
+      }
+      return Image.asset(
+        'assets/no-image.png',
+        fit: BoxFit.cover,
+        height: 300,
+      );
+    }
+  }
+
+  _selectImage() async{
+    final _picker = ImagePicker();
+    PickedFile pickedFile = await _picker.getImage(
+      source: ImageSource.gallery,
+    );
+    productImage = File(pickedFile.path);
+    if (productImage != null) {
+      product.photoUrl = null;
+    }
+    setState(() {});
+  }
+
+  _takePhoto(){
+
+  }
+
 }
