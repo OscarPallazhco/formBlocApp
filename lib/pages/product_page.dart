@@ -193,19 +193,25 @@ class _ProductPageState extends State<ProductPage> {
   }
 
   _selectImage() async{
+    _processImage(ImageSource.gallery);
+  }
+
+  _takePhoto() async{
+    _processImage(ImageSource.camera);
+  }
+
+  _processImage(ImageSource imageSource) async{
     final _picker = ImagePicker();
     PickedFile pickedFile = await _picker.getImage(
-      source: ImageSource.gallery,
+      source: imageSource
     );
-    productImage = File(pickedFile.path);
+    if (pickedFile != null) {
+      productImage = File(pickedFile.path);
+    }
     if (productImage != null) {
       product.photoUrl = null;
     }
     setState(() {});
-  }
-
-  _takePhoto(){
-
   }
 
 }
