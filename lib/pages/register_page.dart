@@ -191,7 +191,7 @@ class RegisterPage extends StatelessWidget {
           onPressed: !snapshot.hasData ? null : () async{
             Map<String, dynamic> result = await userProvider.newUser(loginBloc.email, loginBloc.password);
             if (result['ok']) {
-              Navigator.pushNamed(context, 'home_page');              
+              Navigator.pushReplacementNamed(context, 'home_page');              
             } else {
               showAlert(context, 'Error', result['message']);
             }
