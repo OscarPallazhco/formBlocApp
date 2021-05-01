@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:formbloc_app/bloc/provider.dart';
 import 'package:formbloc_app/providers/user_provider.dart';
+import 'package:formbloc_app/utils/utils.dart';
 
 class LoginPage extends StatelessWidget {
 
@@ -188,9 +189,13 @@ class LoginPage extends StatelessWidget {
             ),
             primary: Colors.deepPurple
           ),
-          onPressed: !snapshot.hasData ? null : (){
-            userProvider.login(loginBloc.email, loginBloc.password);
-            // Navigator.pushNamed(context, 'home_page');
+          onPressed: !snapshot.hasData ? null : () async{
+            Map<String, dynamic> result = await userProvider.login(loginBloc.email, loginBloc.password);
+            if (result['ok']) {
+              Navigator.pushNamed(context, 'home_page');              
+            } else {
+              showAlert(context, 'Error', result['message']);
+            }
           },      
         );
       },

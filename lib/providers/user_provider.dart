@@ -40,7 +40,7 @@ class UserProvider {
         print('error en newUser');
         final resp = {
           'ok': false,
-          'mensaje': decodedData['error']['message']
+          'message': decodedData['error']['message']
         };
         print(resp);
         return resp;
@@ -50,7 +50,7 @@ class UserProvider {
       print(e);
       final resp = {
         'ok': false,
-        'mensaje': e.toString()
+        'message': e.toString()
       };      
       return resp;
     }
@@ -86,7 +86,7 @@ class UserProvider {
         print('error en login');
         final resp = {
           'ok': false,
-          'mensaje': decodedData['error']['message']
+          'message': decodedData['error']['message']
         };
         print(resp);
         return resp;
@@ -96,7 +96,7 @@ class UserProvider {
       print(e);
       final resp = {
         'ok': false,
-        'mensaje': e.toString()
+        'message': e.toString()
       };      
       return resp;
     }
