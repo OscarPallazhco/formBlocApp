@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:formbloc_app/user_preferences/user_preferences.dart';
 import 'package:http/http.dart' as http;
 
 import 'package:formbloc_app/global/environments.dart';
@@ -7,6 +8,7 @@ import 'package:formbloc_app/global/environments.dart';
 class UserProvider {
 
   final String _firebaseApiKey = Environments.firebaseApiKey;
+  final _prefs = new UserPreferences();
 
   Future <Map<String, dynamic>> newUser(String email, String password) async{
     try {
@@ -26,6 +28,7 @@ class UserProvider {
       Map<String, dynamic> decodedData = json.decode(resp.body);
       if (decodedData.containsKey('idToken')) {
         // code 200
+        _prefs.token = decodedData['idToken'];
         final resp = {
           'ok': true,
           'idToken': decodedData['idToken']
@@ -71,6 +74,7 @@ class UserProvider {
       Map<String, dynamic> decodedData = json.decode(resp.body);
       if (decodedData.containsKey('idToken')) {
         // code 200
+        _prefs.token = decodedData['idToken'];
         final resp = {
           'ok': true,
           'idToken': decodedData['idToken']
