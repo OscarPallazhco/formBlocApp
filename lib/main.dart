@@ -15,11 +15,12 @@ void main() async{
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    UserPreferences userPreferences = new UserPreferences();
     return Provider(
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'login_page',
+        initialRoute: userPreferences.userIsLoged() ? 'home_page' : 'login_page',
         routes: routes,
         theme: ThemeData(
           primaryColor: Colors.deepPurple

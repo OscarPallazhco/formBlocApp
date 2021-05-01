@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formbloc_app/bloc/provider.dart';
 import 'package:formbloc_app/models/product_model.dart';
 import 'package:formbloc_app/providers/products_provider.dart';
+import 'package:formbloc_app/user_preferences/user_preferences.dart';
 
 class HomePage extends StatefulWidget {
 
@@ -11,6 +12,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   final productsProvider = new ProductsProvider();
+  UserPreferences userPreferences = new UserPreferences();
 
   @override
   Widget build(BuildContext context) {
@@ -19,6 +21,12 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('Products'),
         centerTitle: true,
+        actions: [
+          IconButton(icon: Icon(Icons.exit_to_app), onPressed: (){
+            userPreferences.logout();
+            Navigator.pushReplacementNamed(context, 'login_page');
+          })
+        ],
       ),
       body: showProducts(),
       floatingActionButton: FloatingActionButton(

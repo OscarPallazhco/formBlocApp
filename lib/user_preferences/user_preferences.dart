@@ -47,5 +47,13 @@ class UserPreferences {
     _prefs.setString('lastpage', value);
   }
 
+  bool userIsLoged(){
+    return _prefs.containsKey('token');
+  }
+
+  void logout(){
+    _prefs.remove('token');
+  }
+
 }
 
