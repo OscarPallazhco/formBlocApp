@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:formbloc_app/bloc/provider.dart';
+import 'package:formbloc_app/providers/user_provider.dart';
 
 class LoginPage extends StatelessWidget {
+
+  final UserProvider userProvider = new UserProvider();  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -111,7 +116,11 @@ class LoginPage extends StatelessWidget {
           SizedBox(height: 25,),
           GestureDetector(
             child: Text('Crear nueva cuenta'),
-            onTap: ()=>Navigator.pushReplacementNamed(context, 'register_page'),
+            onTap: (){
+              loginBloc.changeEmail('');
+              loginBloc.changePassword('');
+              Navigator.pushReplacementNamed(context, 'register_page');
+            },
           ),
           SizedBox(height: 100,)
         ],
@@ -180,7 +189,8 @@ class LoginPage extends StatelessWidget {
             primary: Colors.deepPurple
           ),
           onPressed: !snapshot.hasData ? null : (){
-            Navigator.pushNamed(context, 'home_page');
+            userProvider.login(loginBloc.email, loginBloc.password);
+            // Navigator.pushNamed(context, 'home_page');
           },      
         );
       },

@@ -115,7 +115,11 @@ class RegisterPage extends StatelessWidget {
           SizedBox(height: 25,),
           GestureDetector(
             child: Text('¿Ya tienes cuenta? Ingresa'),
-            onTap: ()=>Navigator.pushReplacementNamed(context, 'login_page'),
+            onTap: (){
+              loginBloc.changeEmail('');
+              loginBloc.changePassword('');
+              Navigator.pushReplacementNamed(context, 'login_page');
+            }
           ),
           SizedBox(height: 100,)
         ],
