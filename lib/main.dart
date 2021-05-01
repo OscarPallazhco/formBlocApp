@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Material App',
-        initialRoute: 'home_page',
+        initialRoute: 'login_page',
         routes: routes,
         theme: ThemeData(
           primaryColor: Colors.deepPurple

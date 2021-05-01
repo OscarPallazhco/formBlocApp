@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:formbloc_app/bloc/provider.dart';
+import 'package:formbloc_app/providers/user_provider.dart';
 
 class RegisterPage extends StatelessWidget {
+
+  final UserProvider userProvider = new UserProvider();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -180,7 +184,8 @@ class RegisterPage extends StatelessWidget {
             primary: Colors.deepPurple
           ),
           onPressed: !snapshot.hasData ? null : (){
-            Navigator.pushNamed(context, 'home_page');
+            userProvider.newUser(loginBloc.email, loginBloc.password);
+            // Navigator.pushNamed(context, 'home_page');
           },      
         );
       },
