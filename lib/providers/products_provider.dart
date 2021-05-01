@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:formbloc_app/user_preferences/user_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
 import 'dart:convert';
@@ -12,10 +13,11 @@ class ProductsProvider {
   final String databaseUrl  = Environments.databaseUrl;
   final String uploadPreset = Environments.uploadPreset;
   final String cloudName    = Environments.cloudName;
+  final _userPreferences     = new UserPreferences();
 
   Future<bool> createProduct(ProductModel product) async{
     try {
-      final String productsUrl = '$databaseUrl/products.json';
+      final String productsUrl = '$databaseUrl/products.json?auth=${_userPreferences.token}';
       final url = Uri.parse(productsUrl);
       final resp = await http.post(url, body: productModelToJson(product));
 
@@ -32,7 +34,7 @@ class ProductsProvider {
 
   Future<List<ProductModel>> getProducts() async{
     try {
-      final String productsUrl = '$databaseUrl/products.json';
+      final String productsUrl = '$databaseUrl/products.json?auth=${_userPreferences.token}';
       final url = Uri.parse(productsUrl);
       final resp = await http.get(url);
 
@@ -55,7 +57,7 @@ class ProductsProvider {
 
   Future<int> deleteProduct(String id) async{
     try {
-      final String productUrl = '$databaseUrl/products/$id.json';
+      final String productUrl = '$databaseUrl/products/$id.json?auth=${_userPreferences.token}';
       final url = Uri.parse(productUrl);
       final resp = await http.delete(url);
       print(resp);
@@ -70,7 +72,7 @@ class ProductsProvider {
 
   Future<bool> updateProduct(ProductModel product) async{
     try {
-      final String productUrl = '$databaseUrl/products/${product.id}.json';
+      final String productUrl = '$databaseUrl/products/${product.id}.json?auth=${_userPreferences.token}';
       final url = Uri.parse(productUrl);
       final resp = await http.put(url, body: productModelToJson(product));
       final decodedData = json.decode(resp.body);
