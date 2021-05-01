@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formbloc_app/bloc/provider.dart';
 
-class LoginPage extends StatelessWidget {
+class RegisterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -98,7 +98,7 @@ class LoginPage extends StatelessWidget {
             ),
             child: Column(
               children: [
-                Text('Inicio de sesión', style: TextStyle(fontSize: 20),),
+                Text('Registro', style: TextStyle(fontSize: 20),),
                 SizedBox(height: 40,),
                 _emailInputField(loginBloc),
                 SizedBox(height: 30,),
@@ -110,8 +110,8 @@ class LoginPage extends StatelessWidget {
           ),
           SizedBox(height: 25,),
           GestureDetector(
-            child: Text('Crear nueva cuenta'),
-            onTap: ()=>Navigator.pushReplacementNamed(context, 'register_page'),
+            child: Text('¿Ya tienes cuenta? Ingresa'),
+            onTap: ()=>Navigator.pushReplacementNamed(context, 'login_page'),
           ),
           SizedBox(height: 100,)
         ],
@@ -170,7 +170,7 @@ class LoginPage extends StatelessWidget {
         return ElevatedButton(
           child: Container(        
             padding: EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-            child: Text('Ingresar',),
+            child: Text('Registrar',),
           ),
           style: ElevatedButton.styleFrom(
             elevation: 0.0,
