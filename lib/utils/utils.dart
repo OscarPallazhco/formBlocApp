@@ -10,7 +10,7 @@ bool isNumeris(String s){
   return (n == null) ? false : true;
 }
 
-void showAlert(BuildContext context, String title, String message){
+void showAlert(BuildContext context, String title, String message, {void Function() callback}){
   if (Platform.isAndroid) {
     showDialog(
       context: context,
@@ -20,7 +20,12 @@ void showAlert(BuildContext context, String title, String message){
         actions: [
           MaterialButton(
             child: Text('Ok'),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () {
+              Navigator.pop(context);
+              if (callback != null) {
+                callback();
+              }
+            },
           )
         ],
       )

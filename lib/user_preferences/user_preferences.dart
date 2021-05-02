@@ -58,6 +58,7 @@ class UserPreferences {
 
   void logout(){
     _prefs.remove('token');
+    _prefs.remove('refreshToken');
   }
 
 }

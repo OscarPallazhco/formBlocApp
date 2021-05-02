@@ -28,8 +28,10 @@ class UserProvider {
       Map<String, dynamic> decodedData = json.decode(resp.body);
       if (decodedData.containsKey('idToken')) {
         // code 200
-        _prefs.token = decodedData['idToken'];
-        _prefs.refreshToken = decodedData['refreshToken'];
+        // _prefs.token = decodedData['idToken'];
+        // _prefs.refreshToken = decodedData['refreshToken'];
+        
+        await sendEmailVerification(decodedData['idToken']);
         final resp = {
           'ok': true,
           'idToken': decodedData['idToken']
@@ -75,13 +77,20 @@ class UserProvider {
       Map<String, dynamic> decodedData = json.decode(resp.body);
       if (decodedData.containsKey('idToken')) {
         // code 200
+        Map<String, dynamic> resp = new Map();
+
+        //verificar que ya se ha verificado el email
+        final emailVerifiedResponse = await isEmailVerified(decodedData['idToken']);
+        if (!emailVerifiedResponse['ok']) {
+          resp['ok'] = false;
+          resp['message'] = emailVerifiedResponse['message'];
+          return resp;
+        }
+
         _prefs.token = decodedData['idToken'];
         _prefs.refreshToken = decodedData['refreshToken'];
-        final resp = {
-          'ok': true,
-          'idToken': decodedData['idToken']
-        };
-        // print(resp);
+        resp['ok'] = true;
+        resp['idToken'] = decodedData['idToken'];
         return resp;
       } else {
         // code != 200
@@ -95,6 +104,119 @@ class UserProvider {
       }
     } catch (e) {
       print('error en login');
+      print(e);
+      final resp = {
+        'ok': false,
+        'message': e.toString()
+      };      
+      return resp;
+    }
+  }
+  
+  Future <Map<String, dynamic>> getUserData(String idToken) async{
+    try {
+      final authData = {
+        'idToken' : idToken,
+        'returnSecureToken': true,      
+      };
+
+      final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:lookup?key=$_firebaseApiKey');
+
+      final resp = await http.post(
+        url,
+        body: json.encode(authData)
+      );
+
+      Map<String, dynamic> decodedData = json.decode(resp.body);
+      if (resp.statusCode == 200) {
+        // code 200
+        final resp = {
+          'ok': true,
+          'userData': decodedData
+        };
+        // print(resp);
+        return resp;
+      } else {
+        // code != 200
+        print('error en getUserData');
+        final resp = {
+          'ok': false,
+          'message': decodedData['error']['message']
+        };
+        print(resp);
+        return resp;
+      }
+    } catch (e) {
+      print('error en getUserData');
+      print(e);
+      final resp = {
+        'ok': false,
+        'message': e.toString()
+      };      
+      return resp;
+    }
+  }
+
+  Future <Map<String, dynamic>> sendEmailVerification(String idToken) async{
+    try {
+      final authData = {
+        'idToken' : idToken,
+        'requestType': 'VERIFY_EMAIL',      
+      };
+
+      final url = Uri.parse('https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=$_firebaseApiKey');
+
+      final resp = await http.post(
+        url,
+        body: json.encode(authData)
+      );
+
+      Map<String, dynamic> decodedData = json.decode(resp.body);
+      if (resp.statusCode == 200) {
+        // code 200
+        final resp = {
+          'ok': true,
+        };
+        // print(resp);
+        return resp;
+      } else {
+        // code != 200
+        print('error en sendEmailVerification');
+        final resp = {
+          'ok': false,
+          'message': decodedData['error']['message']
+        };
+        print(resp);
+        return resp;
+      }
+    } catch (e) {
+      print('error en sendEmailVerification');
+      print(e);
+      final resp = {
+        'ok': false,
+        'message': e.toString()
+      };      
+      return resp;
+    }
+  }
+
+  Future<Map<String, dynamic>> isEmailVerified(String idToken) async {
+    try {
+      final result = await getUserData(idToken);
+      Map<String, dynamic> resp = new Map();
+      if (result['ok']) {
+        bool isVerified = result['userData']['users'][0]['emailVerified'];
+        resp['ok'] = isVerified;
+        if (!isVerified) {
+          resp['message'] = 'email no ha sido verificado aún';
+        }        
+      }else{
+        resp['ok'] = false;
+        resp['message'] = result['message'];
+      }
+      return resp;
+    } catch (e) {
+      print('error en isEmailVerified');
       print(e);
       final resp = {
         'ok': false,

@@ -141,7 +141,7 @@ class RegisterPage extends StatelessWidget {
               icon: Icon(Icons.alternate_email, color: Colors.deepPurple,),
               hintText: 'ejemplo@email.com',
               labelText: 'Correo electrónico',
-              counterText: snapshot.data,
+              // counterText: snapshot.data,
               errorText: snapshot.error,
             ),
             onChanged: (value)=>loginBloc.changeEmail(value),
@@ -162,7 +162,7 @@ class RegisterPage extends StatelessWidget {
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline_rounded, color: Colors.deepPurple,),
               labelText: 'Contraseña',
-              counterText: snapshot.data,
+              // counterText: snapshot.data,
               errorText: snapshot.error,
             ),
             onChanged: (value)=>loginBloc.changePassword(value),
@@ -191,7 +191,12 @@ class RegisterPage extends StatelessWidget {
           onPressed: !snapshot.hasData ? null : () async{
             Map<String, dynamic> result = await userProvider.newUser(loginBloc.email, loginBloc.password);
             if (result['ok']) {
-              Navigator.pushReplacementNamed(context, 'home_page');              
+              loginBloc.changeEmail('');
+              loginBloc.changePassword('');
+              showAlert(context, 'Registro exitoso', 'Activa tu cuenta mediante el email que te acabamos de enviar.',
+                callback: ()=> Navigator.pushReplacementNamed(context, 'login_page')
+              );
+              
             } else {
               showAlert(context, 'Error', result['message']);
             }

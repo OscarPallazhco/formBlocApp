@@ -142,7 +142,7 @@ class LoginPage extends StatelessWidget {
               icon: Icon(Icons.alternate_email, color: Colors.deepPurple,),
               hintText: 'ejemplo@email.com',
               labelText: 'Correo electrónico',
-              counterText: snapshot.data,
+              // counterText: snapshot.data,
               errorText: snapshot.error,
             ),
             onChanged: (value)=>loginBloc.changeEmail(value),
@@ -163,7 +163,7 @@ class LoginPage extends StatelessWidget {
             decoration: InputDecoration(
               icon: Icon(Icons.lock_outline_rounded, color: Colors.deepPurple,),
               labelText: 'Contraseña',
-              counterText: snapshot.data,
+              // counterText: (snapshot.data!=null) ? '*' * snapshot.data.length : snapshot.data,
               errorText: snapshot.error,
             ),
             onChanged: (value)=>loginBloc.changePassword(value),
@@ -192,6 +192,8 @@ class LoginPage extends StatelessWidget {
           onPressed: !snapshot.hasData ? null : () async{
             Map<String, dynamic> result = await userProvider.login(loginBloc.email, loginBloc.password);
             if (result['ok']) {
+              loginBloc.changeEmail('');
+              loginBloc.changePassword('');
               Navigator.pushReplacementNamed(context, 'home_page');              
             } else {
               showAlert(context, 'Error', result['message']);
