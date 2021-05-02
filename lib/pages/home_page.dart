@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:formbloc_app/bloc/provider.dart';
+
 import 'package:formbloc_app/models/product_model.dart';
 import 'package:formbloc_app/providers/products_provider.dart';
 import 'package:formbloc_app/user_preferences/user_preferences.dart';
@@ -16,7 +16,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final loginBloc = Provider.of(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Products'),

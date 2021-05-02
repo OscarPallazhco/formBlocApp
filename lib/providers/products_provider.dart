@@ -41,6 +41,7 @@ class ProductsProvider {
       final Map<String, dynamic> decodedData = json.decode(resp.body);
       // print(decodedData);
       if (decodedData == null ) return [];
+      if (decodedData['error'] != null ) return [];
       List<ProductModel> products = [];
       decodedData.forEach((key, value) {
         ProductModel prodTemp = ProductModel.fromJson(value);

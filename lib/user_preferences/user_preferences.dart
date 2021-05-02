@@ -36,6 +36,15 @@ class UserPreferences {
   set token( String value ) {
     _prefs.setString('token', value);
   }
+
+  // GET y SET del refresh token
+  get refreshToken {
+    return _prefs.getString('refreshToken') ?? '';
+  }
+
+  set refreshToken( String value ) {
+    _prefs.setString('refreshToken', value);
+  }
   
 
   // GET y SET de la última página
@@ -45,10 +54,6 @@ class UserPreferences {
 
   set lastpage( String value ) {
     _prefs.setString('lastpage', value);
-  }
-
-  bool userIsLoged(){
-    return _prefs.containsKey('token');
   }
 
   void logout(){
