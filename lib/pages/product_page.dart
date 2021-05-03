@@ -148,7 +148,7 @@ class _ProductPageState extends State<ProductPage> {
     formKey.currentState.save();
     // dispara todos los onsaved de los textformfield dentro del formulario
     
-    bool result;
+    Map<String, dynamic> result;
     setState(() {_saving = true;});
 
     if (productImage != null) {
@@ -166,7 +166,7 @@ class _ProductPageState extends State<ProductPage> {
     }
     setState(() {_saving = false;});
     String msgAction = (product.id == null) ? 'Registro guardado' : 'Registro actualizado';
-    String msgResult = result ? msgAction : 'Error al guardar el registro';
+    String msgResult = result['ok'] ? msgAction : 'Error: ${result['message']}';
     _showSnackbar(msgResult);
     Navigator.pop(context);
   }

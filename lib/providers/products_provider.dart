@@ -15,20 +15,29 @@ class ProductsProvider {
   final String cloudName    = Environments.cloudName;
   final _userPreferences     = new UserPreferences();
 
-  Future<bool> createProduct(ProductModel product) async{
+  Future<Map<String, dynamic>> createProduct(ProductModel product) async{
     try {
+      Map<String, dynamic> result = new Map();
       final String productsUrl = '$databaseUrl/products.json?auth=${_userPreferences.token}';
       final url = Uri.parse(productsUrl);
       final resp = await http.post(url, body: productModelToJson(product));
 
       final decodedData = json.decode(resp.body);
-
+      if (resp.statusCode != 200) {
+        result['ok'] = false;
+        result['message'] = decodedData['error'];
+        return result;
+      }
       // print(decodedData);
-      return true;
+      result['ok'] = true;
+      return result;
     } catch (e) {
+      Map<String, dynamic> result = new Map();
+      result['ok'] = false;
+      result['message'] = e.toString();
       print('error en createProduct');
       print(e);
-      return false;
+      return result;
     }
   }
 
@@ -71,18 +80,28 @@ class ProductsProvider {
     }
   }
 
-  Future<bool> updateProduct(ProductModel product) async{
+  Future<Map<String, dynamic>> updateProduct(ProductModel product) async{
     try {
+      Map<String, dynamic> result = new Map();
       final String productUrl = '$databaseUrl/products/${product.id}.json?auth=${_userPreferences.token}';
       final url = Uri.parse(productUrl);
       final resp = await http.put(url, body: productModelToJson(product));
       final decodedData = json.decode(resp.body);
-      print(decodedData);
-      return true;
+      if (resp.statusCode != 200) {
+        result['ok'] = false;
+        result['message'] = decodedData['error'];
+        return result;
+      }
+      // print(decodedData);
+      result['ok'] = true;
+      return result;
     } catch (e) {
+      Map<String, dynamic> result = new Map();
       print('error en updateProduct');
       print(e);
-      return false;
+      result['ok'] = false;
+      result['message'] = e.toString();
+      return result;
     }
   }
 
