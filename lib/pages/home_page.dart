@@ -13,9 +13,17 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final productsProvider = new ProductsProvider();
   UserPreferences userPreferences = new UserPreferences();
+  bool isAdmin = false;
 
   @override
   Widget build(BuildContext context) {
+
+    final bool isAdminArg = ModalRoute.of(context).settings.arguments;
+    // paso de parametro en el navigator
+    if (isAdminArg != null) {
+      isAdmin = isAdminArg;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Products'),
@@ -28,13 +36,17 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: showProducts(),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
-        backgroundColor: Colors.deepPurple,
-        onPressed: () {
-          Navigator.pushNamed(context, 'product_page').then((value) => setState((){}));
-        },
-      ),
+      floatingActionButton: isAdmin ? buildFloatingActionButton(context) : null,
+    );
+  }
+
+  FloatingActionButton buildFloatingActionButton(BuildContext context) {
+    return FloatingActionButton(
+      child: Icon(Icons.add),
+      backgroundColor: Colors.deepPurple,
+      onPressed: () {
+        Navigator.pushNamed(context, 'product_page').then((value) => setState((){}));
+      },
     );
   }
 
@@ -51,56 +63,60 @@ class _HomePageState extends State<HomePage> {
             itemCount: products.length,
             itemBuilder: (BuildContext context, int index) {
               final product = products[index];
-              return Dismissible(
-                key: Key(product.id),
-                background: Container(color: Colors.purple[100],),
-                onDismissed: (DismissDirection direction) async{
-                  await productsProvider.deleteProduct(product.id);
-                },
-                child: GestureDetector(
-                  onTap: (){
-                    Navigator.pushNamed(context, 'product_page', arguments: product).then((value) => setState((){}));
-                    // paso de argumentos en el navigator
+              if (isAdmin) {
+                return Dismissible(
+                  key: Key(product.id),
+                  background: Container(color: Colors.purple[100],),
+                  onDismissed: (DismissDirection direction) async{
+                    await productsProvider.deleteProduct(product.id);
                   },
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(20)),
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                    elevation: 8,
-                    shadowColor: Colors.black,
-                    color: Colors.grey[100],
-                    child: Column(
-                      children: [
-                        product.photoUrl == null 
-                          ? Image(image: AssetImage('assets/no-image.png'))
-                          : FadeInImage(
-                              placeholder: AssetImage('assets/jar-loading.gif'), 
-                              image: NetworkImage(product.photoUrl),
-                              height: 300,
-                              width: double.infinity,
-                              fit: BoxFit.cover,
-                            ),
-                        ListTile(
-                          title: Text(product.title),
-                          subtitle: Text('\$${product.value}'),
-                          leading: Icon(
-                            Icons.check_circle,
-                            color: product.available ? Colors.deepPurple: Colors.grey,
-                          ),
-                        ),
-                      ],
-                    ),                  
-                  ),
-                )
-              );
-
+                  child: GestureDetector(
+                    onTap: ()=> Navigator.pushNamed(context, 'product_page', arguments: product).then((value) => setState((){})),
+                    child: buildCard(product),
+                  )
+                );
+              } else {
+                return buildCard(product);
+              }
             },
           );
         } else {
           return Center(child: CircularProgressIndicator());
         }
       },
+    );
+  }
+
+  Card buildCard(ProductModel product) {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+      ),
+      margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      elevation: 8,
+      shadowColor: Colors.black,
+      color: Colors.grey[100],
+      child: Column(
+        children: [
+          product.photoUrl == null 
+            ? Image(image: AssetImage('assets/no-image.png'))
+            : FadeInImage(
+                placeholder: AssetImage('assets/jar-loading.gif'), 
+                image: NetworkImage(product.photoUrl),
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+          ListTile(
+            title: Text(product.title),
+            subtitle: Text('\$${product.value}'),
+            leading: Icon(
+              Icons.check_circle,
+              color: product.available ? Colors.deepPurple: Colors.grey,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

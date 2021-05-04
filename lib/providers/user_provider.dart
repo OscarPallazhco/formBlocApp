@@ -89,7 +89,9 @@ class UserProvider {
 
         _prefs.token = decodedData['idToken'];
         _prefs.refreshToken = decodedData['refreshToken'];
+        _prefs.uid = decodedData['localId'];
         resp['ok'] = true;
+        resp['uid'] = decodedData['localId'];
         resp['idToken'] = decodedData['idToken'];
         return resp;
       } else {

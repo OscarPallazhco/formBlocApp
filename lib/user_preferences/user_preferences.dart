@@ -28,6 +28,15 @@ class UserPreferences {
     this._prefs = await SharedPreferences.getInstance();
   }
 
+  // GET y SET del uid
+  get uid {
+    return _prefs.getString('uid') ?? '';
+  }
+
+  set uid( String value ) {
+    _prefs.setString('uid', value);
+  }
+
   // GET y SET del token
   get token {
     return _prefs.getString('token') ?? '';
@@ -59,6 +68,7 @@ class UserPreferences {
   void logout(){
     _prefs.remove('token');
     _prefs.remove('refreshToken');
+    _prefs.remove('uid');
   }
 
 }

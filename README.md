@@ -1,16 +1,9 @@
-# formbloc_app
-
-A new Flutter project.
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+# Crear usuarios admin manualmente
+1. Registrar normalmente  
+2. En firebase/Authenticaction/Users obtener el uid y el email del usuario que  
+   se quiere hacer admin  
+3. En firebase/Realtime Database/Datos agregar en el nodo admins el uid y como hijo  
+   agregar el campo "email" y como valor el email correspondiente  
+4. En firebase/Realtime Database/Reglas/Editar reglas modificar la regla de write  
+   agregando: auth.uid === 'new_uid'  
+   donde new_uid es el uid del usuario que se quiere hacer admin.

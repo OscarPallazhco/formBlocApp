@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:formbloc_app/bloc/provider.dart';
+import 'package:formbloc_app/providers/admins_provider.dart';
 import 'package:formbloc_app/providers/user_provider.dart';
 import 'package:formbloc_app/utils/utils.dart';
 
 class LoginPage extends StatelessWidget {
 
-  final UserProvider userProvider = new UserProvider();  
+  final UserProvider   userProvider   = new UserProvider();
+  final AdminsProvider adminsProvider = new AdminsProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -192,9 +194,10 @@ class LoginPage extends StatelessWidget {
           onPressed: !snapshot.hasData ? null : () async{
             Map<String, dynamic> result = await userProvider.login(loginBloc.email, loginBloc.password);
             if (result['ok']) {
+              final currentUserIsAdmin = await adminsProvider.isAdmin(result['uid']);
               loginBloc.changeEmail('');
               loginBloc.changePassword('');
-              Navigator.pushReplacementNamed(context, 'home_page');              
+              Navigator.pushReplacementNamed(context, 'home_page', arguments: currentUserIsAdmin);
             } else {
               showAlert(context, 'Error', result['message']);
             }
